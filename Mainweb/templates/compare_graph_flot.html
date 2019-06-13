@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+<head>
+
+    <meta charset="utf-8">
+    <title>对比图表</title>
+    <link href="{% static 'css/bootstrap.min14ed.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min93e3.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.min862f.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <label class="col-sm-2 control-label" style="text-align: right">选择日期: </label>
+            <form action="{% url 'backms:compare' %}" method="post">
+                <input type="text" value="{{ time_want }}" class="demo-input" name="time_interval" placeholder="请选择日期"
+                       id="test1">
+                <input type="hidden" name="time_compare_titles" value="{{ time_compare_titles }}">
+                <input type="submit" value="提交">
+                {% csrf_token %}
+            </form>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>舆论对比</h5>
+
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="flot-chart">
+                        <div class="flot-chart-content" id="flot-line-chart-multi"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.resize.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+<script src="{% static 'js/content.min.js' %}"></script>
+<script src="{% static 'js/laydate/laydate.js' %}"></script>
+<script>
+    //年月范围
+    laydate.render({
+        elem: '#test1'
+        , range: true
+    });
+    $(function () {
+        function e(e, o) {
+            return e.toFixed(o.tickDecimals)
+        }
+
+        function o(o) {
+            $.plot($("#flot-line-chart-multi"), [
+                    {% for title in compare_titles %}
+                        {data: t{{ forloop.counter }}, label: "{{ title }}", yaxis:{{forloop.counter}}},
+                    {% endfor %}
+                ],
+                {
+                    xaxes: [{mode: "time"}],
+                    yaxes: [{min: 0}, {alignTicksWithAxis: "right" == o ? 1 : null, position: o, tickFormatter: e}],
+                    legend: {position: "sw"},
+                    {# this colors controls the color of graph #}
+                    colors: ["#1ab394"],
+                    grid: {
+                        color: "#999999",
+                        hoverable: !0,
+                        clickable: !0,
+                        tickColor: "#D4D4D4",
+                        borderWidth: 0,
+                        hoverable: !0
+                    },
+                    tooltip: !0,
+                    tooltipOpts: {
+                        content: "%s %x 为 %y%", xDateFormat: "%y-%0m-%0d", onHover: function () {
+                        }
+                    }
+                });
+        }
+        {% for motion_tup in motion_list %}
+            var t{{ forloop.counter }} = [
+                {% for time,pos_rate in motion_tup %}
+                    [{{ time }}000, {{ pos_rate }}],
+                {% endfor %}
+            ];
+        {% endfor %}
+        o("right"), $("button").click(function () {
+            o($(this).text())
+        })
+    });
+
+
+</script>
+</body>
+</html>

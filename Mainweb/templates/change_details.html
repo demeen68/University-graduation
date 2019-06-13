@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+
+    <meta charset="utf-8">
+    <title>修改信息</title>
+    <link href="{% static 'css/bootstrap.min14ed.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min93e3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.min862f.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="row m-b-lg">
+        <div class="col-sm-12">
+            <div class="tabs-container">
+
+                <div class="tabs-left">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-8"> 信息修改</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-9"> 密码修改</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content ">
+                        <div id="tab-8" class="tab-pane active">
+                            <div class="panel-body">
+                                <form action="{% url 'user:change_details' %}" method="post">
+                                    <strong style="color: #c9a8ff;padding-bottom: 20px">信息修改</strong>
+                                    <div class="form-group">
+                                        <label></label>
+                                        <p style="color: #14b25b;">{{ msg }}</p>
+                                    </div>
+                                    <p class="text-info">{{ msg_good }}</p>
+                                    <p class="text-danger">{{ msg_bad }}</p>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input name="email" type="text" value="{{ user.email }}"
+                                               placeholder="请输入您的新E-mail"
+                                               class="form-control">
+                                    </div>
+                                    <button class="btn btn-primary " type="submit"><i class="fa fa-check"></i>&nbsp;提交
+                                    </button>
+                                    {% csrf_token %}
+                                </form>
+                            </div>
+                        </div>
+                        <div id="tab-9" class="tab-pane">
+                            <div class="panel-body">
+                                <strong style="color: #c9a8ff;padding-bottom: 20px">密码修改(提交后返回登陆页面)</strong>
+                                <div class="form-group">
+                                    <label></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <form action="{% url 'user:change_passwd' %}" method="post">
+                                        <div class="form-group">
+                                            <label>新密码</label>
+                                            <input name="password1" type="password" placeholder="请输入密码"
+                                                   class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>确认密码</label>
+                                            <input name="password2" type="password" placeholder="请输入密码"
+                                                   class="form-control">
+                                        </div>
+                                        <button class="btn btn-primary " type="submit"><i class="fa fa-check"></i>&nbsp;提交
+                                        </button>
+                                        {% csrf_token %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/content.min.js' %}"></script>
+</body>
+</html>

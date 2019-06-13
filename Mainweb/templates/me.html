@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <link href="{% static 'css/bootstrap.min14ed.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min93e3.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.min862f.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="contact-box">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <h3><strong>用户名: {{ user.username }}</strong>
+                        {% if user.is_staff %}
+                            <strong>(管理员)</strong>
+                        {% else %}
+                            (普通用户)
+                        {% endif %}
+                    </h3>
+                    <br>
+                    <h3>邮箱: {{ user.email }}</h3> <br>
+                    <h3>添加时间: {{ user.create_time }}</h3> <br>
+                    <h3>添加人: {{ user.create_by }}</h3> <br>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/content.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(".contact-box").each(function () {
+            animationHover(this, "pulse")
+        })
+    });
+</script>
+</body>
+</html>

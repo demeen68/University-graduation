@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>创建用户</title>
+
+    <link href="{% static 'css/bootstrap.min14ed.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min93e3.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.min862f.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+{% if user.is_staff %}
+
+{% endif %}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-sm-8" style="width: 100%">
+        <div class="ibox">
+            <div class="ibox-content">
+                <h2>所有用户</h2>
+                <div class="clients-list">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> 已创建用户</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-user"></i> 管理员</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="slimScrollDiv" style="position: relative; width: auto; height: 100%;">
+                                <div class="full-height-scroll" style="width: auto; height: 100%;">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <tbody>
+                                            {% for creat_user in create_list %}
+                                                <tr>
+                                                    <td><a data-toggle="tab" href="#contact-1"
+                                                           class="client-link">{{ creat_user.username }}</a>
+                                                    </td>
+                                                    {% if creat_user.email %}
+                                                        <td> {{ creat_user.email }}</td>
+                                                    {% else %}
+                                                        <td> 暂无邮箱</td>
+                                                    {% endif %}
+                                                    <td> {{ creat_user.create_time }}</td>
+                                                    {% if creat_user.is_staff %}
+                                                        <td class="client-status"><span
+                                                                class="label label-primary">管理员</span>
+                                                        </td>
+                                                    {% else %}
+                                                        <td class="client-status"><span
+                                                                class="label label-primary"></span>
+                                                        </td>
+                                                    {% endif %}
+
+
+                                                    <td class="client-status"><a
+                                                            href="{% url 'user:del_user' %}?id={{ creat_user.id }}">
+                                                            <span
+                                                                    class="label label-primary"
+                                                                    style="background-color: #ee4853">
+                                                        删除
+                                                    </span>
+                                                    </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="slimScrollBar"
+                                     style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 244.898px;"></div>
+                                <div class="slimScrollRail"
+                                     style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div>
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="slimScrollDiv" style="position: relative; width: auto; height: 100%;">
+                                <div class="full-height-scroll" style="width: auto; height: 100%;">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <tbody>
+                                            {% for super_user in super_user_list %}
+                                                <tr>
+                                                    <td><a data-toggle="tab" href="#company-1"
+                                                           class="client-link">{{ super_user.username }}</a>
+                                                    </td>
+                                                    <td>{{ super_user.email }}</td>
+                                                    <td>{{ super_user.create_time }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="slimScrollBar"
+                                     style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 4px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px;"></div>
+                                <div class="slimScrollRail"
+                                     style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/content.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(".contact-box").each(function () {
+            animationHover(this, "pulse")
+        })
+    });
+</script>
+</body>
+
+</html>

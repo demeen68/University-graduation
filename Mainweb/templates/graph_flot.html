@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>详情</title>
+    <link href="{% static 'css/bootstrap.min14ed.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min93e3.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.min862f.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <label class="col-sm-2 control-label" style="text-align: right">选择日期: </label>
+            <form action="{% url 'backms:graph' %}" method="get">
+                <input type="text" value="{{ time_want }}" class="demo-input" name="time_interval" placeholder="请选择日期"
+                       id="test1">
+                <input type="hidden" name="title" value="{{ title }}">
+                <input type="submit" value="提交">
+            </form>
+        </div>
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>积极舆论占比</h5>
+
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="flot-chart">
+                        <div class="flot-chart-content" id="flot-line-chart-multi"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {% if recommend_words %}
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>推荐添加</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">关键词</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for word in recommend_words %}
+                                        <tr>
+                                            <td class="text-center small">{{ word }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if frequency_s %}
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>主题相关词</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">排名</th>
+                                        <th class="text-center">关键词</th>
+                                        <th class="text-center">频数</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for title,count in frequency_s %}
+                                        <tr>
+                                            <td class="text-center">{{ forloop.counter }}</td>
+                                            <td class="text-center small">{{ title }}</td>
+                                            <td class="text-center"><span class="label label-primary">{{ count }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if suggests_list %}
+            <div class="col-sm-3">
+                {# This div is to get suggestions #}
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">相关建议</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for suggest in suggests_list %}
+                                        <tr>
+                                            <td class="text-center small">{{ suggest }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>其他操作</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                {% if frequency_s %}
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <form action="{% url 'backms:down_csv' %}" method="get">
+                                    <input type="hidden" name="title" value="{{ title }}">
+                                    <input type="hidden" name="time_interval" value="{{ time_interval }}">
+                                    <button type="submit" class="btn btn-sm btn-info">导出CSV</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form action="{% url 'backms:index' %}" method="post">
+                                <input type="hidden" name="title_del" value="{{ title }}">
+                                <button type="submit" class="btn btn-sm btn-danger">删除</button>
+                                {% csrf_token %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.resize.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+<script src="{% static 'js/content.min.js' %}"></script>
+<script src="{% static 'js/laydate/laydate.js' %}"></script>
+<script>
+    //年月范围
+    laydate.render({
+        elem: '#test1'
+        , range: true
+    });
+    $(function () {
+        function e(e, o) {
+            return "&yen;" + e.toFixed(o.tickDecimals)
+        }
+
+        function o(o) {
+            $.plot($("#flot-line-chart-multi"), [
+                    {data: t, label: "积极舆论"},
+                ],
+                {
+                    xaxes: [{mode: "time"}],
+                    yaxes: [{min: 0}, {alignTicksWithAxis: "right" == o ? 1 : null, position: o, tickFormatter: e}],
+                    legend: {position: "sw"},
+                    {# this colors controls the color of graph #}
+                    colors: ["#1ab394"],
+                    grid: {
+                        color: "#999999",
+                        hoverable: !0,
+                        clickable: !0,
+                        tickColor: "#D4D4D4",
+                        borderWidth: 0,
+                        hoverable: !0
+                    },
+                    tooltip: !0,
+                    tooltipOpts: {
+                        content: "%s %x 为 %y%", xDateFormat: "%y-%0m-%0d", onHover: function () {
+                        }
+                    }
+                });
+        }
+
+        var t = [
+            {% for time,pos_rate in motion_tup %}
+                [{{ time }}000, {{ pos_rate }}],
+            {% endfor %}
+        ];
+        o("right"), $("button").click(function () {
+            o($(this).text())
+        })
+    });
+
+</script>
+</body>
+</html>
