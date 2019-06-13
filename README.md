@@ -21,7 +21,7 @@
     sudo apt-get install mysql-server # mysql server
     sudo apt-get install libmysqlclient-dev # mysql client
     ```
-2. 建议将 End/ 文件夹放置在 /srv 目录下，千万不要放在 /root 下！
+2. 建议先将所有文件clone到End这个文件夹下，然后将 End/ 文件夹放置在 /srv 目录下，千万不要放在 /root 下！
     ```bash
     mv End/ /srv/
     cd /srv/End/
