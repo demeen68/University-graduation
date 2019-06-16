@@ -111,7 +111,6 @@
     python3 /srv/End/Mainweb/manage.py crontab add
     ```
 # 代码逻辑
-*本系统衍生出一篇会议论文，当论文收录后对这部分进行更加详细的更新。*
 
 >技术上：系统的爬虫模块采用Scrapy框架，后端采用Django框架，配合前端框架，构造了一个“舆情监测系统”。
 
@@ -120,20 +119,37 @@
 下面是一些主要的文件：
 
 + Mainscrapy：*Scrapy爬虫框架代码*
-    + execute_xinwen.sh：*Linux定时执行爬虫的脚本*
-    + Mainscrapy：*爬虫代码*
-      - xinwen_main.py： *定时爬取百度新闻的爬虫启动代码*
-      - baidu_main.py：*爬取百度百科的爬虫启动代码*
-      - <span>middlewares.py</span>：*爬虫伪装请求头*
+  + spiders: *爬虫核心代码*
+    + baidu_spider: *爬取百度百科的爬虫*
+    + xinwen_spider: *爬取百度新闻的爬虫*
+  + execute_xinwen.sh：*Linux定时执行爬虫的脚本*
+  + Mainscrapy：*爬虫代码*
+    - xinwen_main.py： *定时爬取百度新闻的爬虫启动代码*
+    - baidu_main.py：*爬取百度百科的爬虫启动代码*
+    - setting: *爬虫配置文件*
+    - items: *将得到的数据发送给django，并借助django保存在Mysql数据库中*
+    - <span>middlewares.py</span>：*爬虫伪装请求头*
 
 + Mainweb: *Django框架代码*
   + apps
     + background_ms：*处理系统前端操作对应的后端*
-    + scrapy_app：*连接Scrapy框架*
+      + <span>views.py</span>: *网站后台处理逻辑*
+    + scrapy_app：*连接爬虫Scrapy框架*
+      + <span>models.py</span>: *与爬虫爬取数据对应的 Django Model*
     + user：*用户与用户组管理*
+      + utils: *工具类*
+        + email_utils: *向用户发送邮箱的方法*
+      + <span>views.py</span>: *处理与用户逻辑有关的代码*
   + extra_apps：*模型训练相关代码*
   + templates：*前端网页文件*
   + static：*css，js文件*
+  + utils: *工具类*
+    + data
+      + motion.txt 大连理工大学情感词库
+      + stopwords.txt 停用词表
+  + Mainweb: *项目配置文件夹*
+    + <span>settings.py</span>: *项目配置*
+    + urls: *根目录URL*
 
 # 技术详解博客
 **Scrapy爬虫：**
