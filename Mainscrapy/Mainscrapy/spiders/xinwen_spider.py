@@ -7,8 +7,12 @@ import jieba
 import jieba.analyse
 import pickle
 from datetime import date
-import MySQLdb
+import pymysql
 import os
+
+username = 'nhmanager'
+password = 'mynhmanager'
+database = 'nhdata'
 
 
 class BaiduSpiderSpider(CrawlSpider):
@@ -28,9 +32,6 @@ class BaiduSpiderSpider(CrawlSpider):
             open(os.path.dirname(__file__) + '/../../../Mainweb/extra_apps/extra_motion/stopwords.pkl', 'rb'))
         # get web list
 
-        # todo test cron
-        print("Get CRON")
-
         need_titles = get_key_words()
         for need_tit in need_titles:
             title = str(need_tit[0])
@@ -41,16 +42,18 @@ class BaiduSpiderSpider(CrawlSpider):
                 # page3:
                 # http://news.baidu.com/ns?word=%27%20%E5%87%8F%E8%82%A5%20%27&pn=40&cl=2&ct=0&tn=news&rn=20&ie=utf-8&bt=0&et=0
 
-                will_url = 'http://news.baidu.com/ns?word=' + title + \
-                           '&pn=0&cl=2&ct=0&tn=news&rn=20&ie=utf-8&bt=0&et=0&clk=sortbytime'
+                will_url = 'https://www.baidu.com/s?tn=news&rtt=4&bsst=1&cl=2&wd=' + title + '&medium=0'
                 yield scrapy.Request(will_url, callback=self.parse, dont_filter=True, meta={
                     'key_words': title,
                     'circle': 0,
                 })
             else:
                 for i in range(20):
-                    will_url = str('http://news.baidu.com/ns?word=' + title + '&pn=' + str(
-                        20 * i) + '&cl=2&ct=0&tn=news&rn=20&ie=utf-8&bt=0&et=0&clk=sortbytime')
+                    will_url = str(
+                        'https://www.baidu.com/s?tn=news&rtt=4&bsst=1&cl=2&wd='
+                        + title
+                        + '&medium=0&x_bfe_rqs=03E80&x_bfe_tjscore=0.000000&tngroupname=organic_news&newVideo=12&rsv_dl=news_b_pn&pn='
+                        + str(20 * i))
                     yield scrapy.Request(will_url, callback=self.parse, dont_filter=True, meta={
                         'key_words': title,
                         'circle': i,
@@ -164,7 +167,7 @@ def save_motion(title, time, potivite_rate):
     :param time:  The timing of the news release.
     :param potivite_rate: potivite words weight / all words motion weight
     """
-    db = MySQLdb.connect("localhost", " 用户名", "密码", "数据库名", charset='utf8')
+    db = pymysql.connect("localhost", username, password, database, charset='utf8')
     cursor = db.cursor()
     cursor.execute(
         "SELECT `positive_rate`,`news_number`,`id` FROM `scrapy_app_motionmodel` WHERE `title`=%s AND `date_time`=%s;",
@@ -200,7 +203,7 @@ def drop_stopwords(contents, stopwords):
 
 
 def get_key_words():
-    db = MySQLdb.connect("localhost", " 用户名", "密码", "数据库名", charset='utf8')
+    db = pymysql.connect("127.0.0.1", username, password, database, charset='utf8')
     cursor = db.cursor()
     cursor.execute("SELECT key_words,has_get_past_news FROM scrapy_app_needtitlemodel;")
     key_words = cursor.fetchall()
@@ -209,7 +212,7 @@ def get_key_words():
 
 
 def change_has_get_past(key_words):
-    db = MySQLdb.connect("localhost", " 用户名", "密码", "数据库名", charset='utf8')
+    db = pymysql.connect("localhost", username, password, database, charset='utf8')
     cursor = db.cursor()
     db_str = "UPDATE `scrapy_app_needtitlemodel` SET `has_get_past_news`=%s WHERE `key_words`=%s ;"
     cursor.execute(db_str, (1, key_words))
@@ -219,7 +222,7 @@ def change_has_get_past(key_words):
 
 # check if db has this key word
 def have_key_word(url, key_words):
-    db = MySQLdb.connect("localhost", " 用户名", "密码", "数据库名", charset='utf8')
+    db = pymysql.connect("localhost", username, password, database, charset='utf8')
     db_str = "select key_words from scrapy_app_newsmodel where FIND_IN_SET(%s, key_words) and url=%s;"
     cursor = db.cursor()
     cursor.execute(db_str, [key_words, url])
@@ -229,7 +232,7 @@ def have_key_word(url, key_words):
 
 
 def check_url(url):
-    db = MySQLdb.connect("localhost", " 用户名", "密码", "数据库名", charset='utf8')
+    db = pymysql.connect("localhost", username, password, database, charset='utf8')
     db_str = "select url from scrapy_app_newsmodel where url=%s"
     cursor = db.cursor()
     cursor.execute(db_str, [url])
@@ -246,7 +249,7 @@ def add_title_in_db(url, new_key_word, key_words_exsit):
     tup_str = ''
     for t in key_words_exsit:
         tup_str = tup_str + t[0] + ","
-    db = MySQLdb.connect("localhost", " 用户名", "密码", "数据库名", charset='utf8')
+    db = pymysql.connect("localhost", username, password, database, charset='utf8')
     cursor = db.cursor()
     db_str = "UPDATE `scrapy_app_newsmodel` SET `key_words`=%s WHERE `url`=%s;"
     cursor.execute(db_str, (key_words_exsit + new_key_word, url))

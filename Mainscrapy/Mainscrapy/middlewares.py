@@ -7,6 +7,9 @@
 
 from scrapy import signals
 from fake_useragent import UserAgent
+from selenium import webdriver
+from scrapy.http import HtmlResponse
+import time
 
 
 class MainscrapySpiderMiddleware(object):
@@ -71,3 +74,33 @@ class RandomUserAgentMiddleware(object):
 
     def process_request(self, request, spider):
         request.headers.setdefault('User-Agent', self.ua.random)
+
+
+class HandlessMiddleware(object):
+
+    def __init__(self):
+        super(HandlessMiddleware, self).__init__()
+        option = webdriver.ChromeOptions()
+        # self.ua = UserAgent()
+
+        option.add_argument('--disable-gpu')
+        option.add_argument('lang=zh_CN.UTF-8')
+        # option.add_argument(
+        #     'user-agent=' + self.ua.random)
+        # option.add_argument('headless')
+        prefs = {
+            "profile.managed_default_content_settings.images": 2,  # 禁止加载图片
+            # 'permissions.default.stylesheet': 2,  # 禁止加载css
+        }
+        option.add_experimental_option("prefs", prefs)
+        self.browser = webdriver.Chrome(chrome_options=option)
+        self.browser.implicitly_wait(10)
+
+    def process_request(self, request, spider):
+        # self.browser.get(request.url)
+
+        print("NEW PAGE GET : " + request.url)
+        self.browser.get(request.url)
+        time.sleep(10)
+        return HtmlResponse(url=self.browser.current_url, body=self.browser.page_source, encoding="utf-8",
+                            request=request)

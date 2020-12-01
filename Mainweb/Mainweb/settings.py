@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import sys
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,9 +81,9 @@ WSGI_APPLICATION = 'Mainweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 使用mysql进行数据存储
-        'NAME': '数据库名',  # 数据库的名称
-        'USER': '用户名',  # 用户名
-        'PASSWORD': '密码',  # 密码
+        'NAME': 'nhdata',  # 数据库的名称
+        'USER': 'nhmanager',  # 用户名
+        'PASSWORD': 'mynhmanager',  # 密码
         'HOST': '127.0.0.1',  # 数据库地址
         'PORT': '3306'  # 端口
     }
